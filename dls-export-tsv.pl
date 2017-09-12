@@ -54,7 +54,7 @@ sub dls_data_tsv {
 		my @record = split /<.*?>/, $_;
 		my $id = $record[3];
 		my @row = $id;
-		for (8..$#record) {
+		for (6..$#record) {
 			push @row, $record[$_] if $_ % 2 == 0;
 		}
 		say OUT join "\t", @row;
