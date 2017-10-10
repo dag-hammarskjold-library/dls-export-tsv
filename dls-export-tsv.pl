@@ -50,10 +50,19 @@ sub dls_data_tsv {
 	open OUT,'>',$file.'.tsv';
 	say $file.'.tsv';
 	local $/;
-	for (<$in> =~ /(<tr>.*?<\/tr>)/g) {
+	ROWS: for (<$in> =~ /(<tr>.*?<\/tr>)/g) {
 		my @record = split /<.*?>/, $_;
+		my @row;
 		my $id = $record[3];
-		my @row = $id;
+		if ($id eq '001') {
+			#header
+			for (3..$#record) {
+				push @row, $record[$_] if (($_ - 3) % 4 == 0);
+			}
+			say OUT join "\t", @row;
+			next ROWS;
+		}
+		@row = $id;
 		for (6..$#record) {
 			push @row, $record[$_] if $_ % 2 == 0;
 		}
